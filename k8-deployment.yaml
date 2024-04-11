@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-inventory-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: product-inventory-api
+  template:
+    metadata:
+      labels:
+        app: product-inventory-api
+    spec:
+      containers:
+      - name: product-inventory-api
+        image: harish444/product-inventory:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: product-inventory-api-service
+spec:
+  selector:
+    app: product-inventory-api
+  ports:
+  - protocol: TCP
+    port: 8080
+  type: NodePort
