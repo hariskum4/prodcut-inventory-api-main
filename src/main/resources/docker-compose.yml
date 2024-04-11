@@ -1,0 +1,14 @@
+version: "3"
+services:
+  productinventorydb:
+   image: mongo:latest
+   container_name: "productinventorydb"
+   ports:
+    - 27017:27017
+  product-inventory-api.01:
+   image: product-inventory-api.01
+   container_name: product-inventory-api.01
+   ports:
+    - 8080:8080
+   links:
+    - productinventorydb

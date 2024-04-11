@@ -1,0 +1,65 @@
+# Spring Boot Application Configuration
+spring:
+  application:
+    name: product-inventory-api # Defines the name of the Spring Boot application
+  server:
+    port: 8080 # Specifies the port on which the application will run
+  data:
+    mongodb:
+      host: localhost # Specifies the host where MongoDB is running
+      port: 27017 # Specifies the port on which MongoDB is listening
+      database: ProductInventory # Specifies the name of the MongoDB database used by the application
+
+# Logging Configuration
+logging:
+  level:
+    com.example.inventory.api: DEBUG # Specifies the logging level for the given package
+  file:
+    name: logs/app.log # Specifies the file name for logging
+
+# Resilience4j Rate Limiter Configuration
+resilience4j.ratelimiter:
+  instances:
+    getProductByIdLimit: # Configures rate limiter instance for the 'getProductById' operation
+      limitForPeriod: 5 # Specifies the maximum number of requests allowed within the period
+      limitRefreshPeriod: 60s # Specifies the duration of the period for rate limiting
+      timeoutDuration: 10s # Specifies the timeout duration for waiting on the rate limiter
+      registerHealthIndicator: true # Registers a health indicator for this rate limiter instance
+      eventConsumerBufferSize: 100 # Specifies the buffer size for event consumption
+    createProductLimit: # Configures rate limiter instance for the 'createProduct' operation
+      limitForPeriod: 5
+      limitRefreshPeriod: 60s
+      timeoutDuration: 10s
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+    createProductsLimit: # Configures rate limiter instance for the 'createProducts' operation
+      limitForPeriod: 5
+      limitRefreshPeriod: 60s
+      timeoutDuration: 10s
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+    updateProductByIdLimit: # Configures rate limiter instance for the 'updateProductById' operation
+      limitForPeriod: 5
+      limitRefreshPeriod: 60s
+      timeoutDuration: 10s
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+    deleteProductByIdLimit: # Configures rate limiter instance for the 'deleteProductById' operation
+      limitForPeriod: 5
+      limitRefreshPeriod: 60s
+      timeoutDuration: 10s
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+
+# Management and Monitoring Configuration
+management:
+  endpoint:
+    health:
+      show-details: ALWAYS # Specifies to always show health details
+  health:
+    ratelimiters:
+      enabled: true # Enables monitoring of rate limiter health
+  endpoints:
+    web:
+      exposure:
+        include: "*" # Specifies to expose all endpoints
