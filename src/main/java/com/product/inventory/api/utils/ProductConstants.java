@@ -46,10 +46,12 @@ public class ProductConstants {
 	    public static final String GET_ALL_PRODUCTS_OPERATION_SUMMARY = "Get all products";
 	    public static final String GET_ALL_PRODUCTS_OPERATION_DESCRIPTION = "Retrieves a paginated list of all products in the inventory";
 	    public static final String GET_ALL_PRODUCTS_RESPONSE_CODE_200_DESCRIPTION = "Successfully retrieved the list of products";
+	    public static final String GET_ALL_PRODUCTS_RESPONSE_CODE_400_DESCRIPTION = "Error in retriving products with pagination";
 	    public static final String PAGE_NUMBER_PARAMETER_DESCRIPTION = "Page number";
 	    public static final String PAGE_SIZE_PARAMETER_DESCRIPTION = "Page size";
 	    public static final String GET_PRODUCTS_BY_STATUS_OPERATION_SUMMARY = "Get products by status";
 	    public static final String GET_PRODUCTS_BY_STATUS_OPERATION_DESCRIPTION = "Retrieves a list of products with a specific status";
 	    public static final String GET_PRODUCTS_BY_STATUS_RESPONSE_CODE_200_DESCRIPTION = "Successfully retrieved the list of products";
+	    public static final String GET_PRODUCTS_BY_STATUS_RESPONSE_CODE_400_DESCRIPTION ="Error retrieving products by status";
 	    public static final String STATUS_PARAMETER_DESCRIPTION = "The status of the products";
 }

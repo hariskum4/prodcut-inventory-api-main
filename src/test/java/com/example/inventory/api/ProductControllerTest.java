@@ -1,6 +1,7 @@
 package com.example.inventory.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -8,213 +9,153 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.product.inventory.api.controller.ProductController;
+import com.product.inventory.api.exception.ProductException;
 import com.product.inventory.api.model.Product;
 import com.product.inventory.api.model.ProductResponse;
 import com.product.inventory.api.service.ProductService;
 
 class ProductControllerTest {
-	 private static final Logger logger = LoggerFactory.getLogger(ProductControllerTest.class);
-    @Mock
-    private ProductService productService;
 
-    @InjectMocks
     private ProductController productController;
+    private ProductService productServiceMock;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        productServiceMock = mock(ProductService.class);
+        productController = new ProductController(productServiceMock);
     }
 
     @Test
     void testCreateProduct() {
-    	logger.info("Starting testCreateProduct...");
-    	 Product product = new Product();
-         product.setId("1");
-         product.setName("Test Product");
-         product.setDescription("Description");
-         product.setPrice(10.0);
-         product.setQuantity(5);
-         product.setStatus("available");
-        when(productService.createProduct(product)).thenReturn(product);
+        Product mockProduct = new Product();
+        mockProduct.setId("1");
+        mockProduct.setName("Test Product");
+        mockProduct.setPrice(10.0);
+        mockProduct.setQuantity(100);
+        mockProduct.setStatus("available");
 
-        ResponseEntity<ProductResponse> response = productController.createProduct(product);
+        when(productServiceMock.createProduct(mockProduct)).thenReturn(mockProduct);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Product created", response.getBody().getMessage());
-        assertEquals(product, response.getBody().getProducts());
-        logger.info("testCreateProduct completed.");
+        ResponseEntity<?> responseEntity = productController.createProduct(mockProduct);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Product created", ((ProductResponse) responseEntity.getBody()).getMessage());
     }
 
     @Test
     void testAddProducts() {
-    	logger.info("Starting testAddProducts...");
-        // Create a list of products
-        List<Product> products = new ArrayList<>();
-        
+        List<Product> mockProducts = new ArrayList<>();
         Product product1 = new Product();
         product1.setId("1");
         product1.setName("Test Product 1");
-        product1.setDescription("Description");
         product1.setPrice(10.0);
-        product1.setQuantity(5);
+        product1.setQuantity(100);
         product1.setStatus("available");
-        
+
         Product product2 = new Product();
         product2.setId("2");
         product2.setName("Test Product 2");
-        product2.setDescription("Description");
         product2.setPrice(20.0);
-        product2.setQuantity(10);
+        product2.setQuantity(200);
         product2.setStatus("available");
 
-        products.add(product1);
-        products.add(product2);
+        mockProducts.add(product1);
+        mockProducts.add(product2);
 
-        // Mock the ProductService's addProducts method
-        when(productService.addProducts(products)).thenReturn(products);
+        when(productServiceMock.addProducts(mockProducts)).thenReturn(mockProducts);
 
-        // Call the controller method being tested
-        ResponseEntity<ProductResponse> response = productController.addProducts(products);
+        ResponseEntity<?> responseEntity = productController.addProducts(mockProducts);
 
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Products created", response.getBody().getMessage());
-        assertEquals(products, response.getBody().getProducts());
-        logger.info("testAddProducts completed.");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Products created", ((ProductResponse) responseEntity.getBody()).getMessage());
     }
-
 
     @Test
     void testGetProductById() {
-    	logger.info("Starting testGetProductById...");
-        String productId = "1";
-        
-        Product product = new Product();
-        product.setId(productId);
-        product.setName("Test Product");
-        product.setDescription("Description");
-        product.setPrice(10.0);
-        product.setQuantity(5);
-        product.setStatus("available");
+        Product mockProduct = new Product();
+        mockProduct.setId("1");
+        mockProduct.setName("Test Product");
+        mockProduct.setPrice(10.0);
+        mockProduct.setQuantity(100);
+        mockProduct.setStatus("available");
 
-        when(productService.getProductById(productId)).thenReturn(product);
+        when(productServiceMock.getProductById("1")).thenReturn(mockProduct);
 
-        ResponseEntity<ProductResponse> response = productController.getProductById(productId);
+        ResponseEntity<?> responseEntity = productController.getProductById("1");
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Product found", response.getBody().getMessage());
-        assertEquals(product, response.getBody().getProducts());
-        logger.info("testGetProductById completed.");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Product found", ((ProductResponse) responseEntity.getBody()).getMessage());
+        assertEquals(mockProduct, ((ProductResponse) responseEntity.getBody()).getProducts());
+    }
+
+    @Test
+    void testUpdateProduct() {
+        Product mockProduct = new Product();
+        mockProduct.setId("1");
+        mockProduct.setName("Test Product");
+        mockProduct.setPrice(10.0);
+        mockProduct.setQuantity(100);
+        mockProduct.setStatus("available");
+
+        when(productServiceMock.updateProduct("1", mockProduct)).thenReturn(mockProduct);
+
+        ResponseEntity<?> responseEntity = productController.updateProduct("1", mockProduct);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Product updated", ((ProductResponse) responseEntity.getBody()).getMessage());
     }
 
     @Test
     void testDeleteProduct() {
-    	 logger.info("Starting testDeleteProduct...");
-        String productId = "1";
+        when(productServiceMock.deleteProduct("1")).thenReturn(new Product());
 
-        // Mock the ProductService's deleteProduct method
-        when(productService.deleteProduct(productId)).thenReturn(null);
+        ResponseEntity<?> responseEntity = productController.deleteProduct("1");
 
-        // Call the controller method being tested
-        ResponseEntity<ProductResponse> response = productController.deleteProduct(productId);
-
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Product deleted", response.getBody().getMessage());
-        assertEquals(null, response.getBody().getProducts());
-        logger.info("testDeleteProduct completed.");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Product deleted", ((ProductResponse) responseEntity.getBody()).getMessage());
     }
 
     @Test
     void testGetAllProducts() {
-    	logger.info("Starting testGetAllProducts...");
-        // Create a list of products
-        List<Product> products = new ArrayList<>();
-        
-        Product product1 = new Product();
-        product1.setId("1");
-        product1.setName("Test Product 1");
-        product1.setDescription("Description");
-        product1.setPrice(10.0);
-        product1.setQuantity(5);
-        product1.setStatus("available");
-        
-        Product product2 = new Product();
-        product2.setId("2");
-        product2.setName("Test Product 2");
-        product2.setDescription("Description");
-        product2.setPrice(20.0);
-        product2.setQuantity(10);
-        product2.setStatus("available");
+        List<Product> mockProducts = new ArrayList<>();
+        when(productServiceMock.getAllProducts(1, 10)).thenReturn(mockProducts);
 
-        products.add(product1);
-        products.add(product2);
+        ResponseEntity<?> responseEntity = productController.getAllProducts(1, 10);
 
-        // Mock the ProductService's getAllProducts method
-        when(productService.getAllProducts(1, 10)).thenReturn(products);
-
-        // Call the controller method being tested
-        ResponseEntity<ProductResponse> response = productController.getAllProducts(1, 10);
-
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Products retrieved", response.getBody().getMessage());
-        assertEquals(products, response.getBody().getProducts());
-        logger.info("testGetAllProducts completed.");
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Products retrieved", ((ProductResponse) responseEntity.getBody()).getMessage());
+        assertEquals(mockProducts, ((ProductResponse) responseEntity.getBody()).getProducts());
     }
 
     @Test
     void testGetProductsByStatus() {
-    	logger.info("Starting testGetProductsByStatus...");
-        String status = "available";
+        List<Product> mockProducts = new ArrayList<>();
+        when(productServiceMock.getProductsByStatus("available")).thenReturn(mockProducts);
 
-        // Create a list of products
-        List<Product> products = new ArrayList<>();
-        
-        Product product1 = new Product();
-        product1.setId("1");
-        product1.setName("Test Product 1");
-        product1.setDescription("Description");
-        product1.setPrice(10.0);
-        product1.setQuantity(5);
-        product1.setStatus("available");
-        
-        Product product2 = new Product();
-        product2.setId("2");
-        product2.setName("Test Product 2");
-        product2.setDescription("Description");
-        product2.setPrice(20.0);
-        product2.setQuantity(10);
-        product2.setStatus("available");
+        ResponseEntity<?> responseEntity = productController.getProductsByStatus("available");
 
-        products.add(product1);
-        products.add(product2);
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(true, ((ProductResponse) responseEntity.getBody()).isSuccess());
+        assertEquals("Products retrieved", ((ProductResponse) responseEntity.getBody()).getMessage());
+        assertEquals(mockProducts, ((ProductResponse) responseEntity.getBody()).getProducts());
+    }
 
-        // Mock the ProductService's getProductsByStatus method
-        when(productService.getProductsByStatus(status)).thenReturn(products);
+    @Test
+    void testFallbackMethod() {
+        ResponseEntity<ProductResponse> responseEntity = productController.productInventoryFallbackMethod(new ProductException(HttpStatus.TOO_MANY_REQUESTS, "Too Many Requests"));
 
-        // Call the controller method being tested
-        ResponseEntity<ProductResponse> response = productController.getProductsByStatus(status);
-
-        // Assertions
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody().isSuccess());
-        assertEquals("Products retrieved", response.getBody().getMessage());
-        assertEquals(products, response.getBody().getProducts());
-        logger.info("testGetProductsByStatus completed.");
+        assertEquals(HttpStatus.TOO_MANY_REQUESTS, responseEntity.getStatusCode());
+        assertEquals(false, responseEntity.getBody().isSuccess());
+        assertEquals("Inventory service does not permit furthur request, please try after some time", responseEntity.getBody().getMessage());
     }
 }

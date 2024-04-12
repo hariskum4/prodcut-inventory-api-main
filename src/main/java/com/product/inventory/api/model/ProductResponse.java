@@ -16,7 +16,6 @@ public class ProductResponse {
 	private boolean success;
 	private String message;
 	private Object products;
-	private String errorCode;
 
 	 public ProductResponse(boolean success, String message, Object products) {
 	        this.success = success;
@@ -24,18 +23,7 @@ public class ProductResponse {
 	        this.products = products;
 	       
 	    }
-	 public ProductResponse(boolean success, String message, String errorCode) {
-	        this.success = success;
-	        this.message = message;
-	        this.errorCode = errorCode;
-	    }   
 	 
-	 public ProductResponse(boolean success, String message, Object products, String errorCode) {
-		    this.success = success;
-		    this.message = message;
-		    this.products = products;
-		    this.errorCode = errorCode;
-		}
 
 
 	public boolean isSuccess() {

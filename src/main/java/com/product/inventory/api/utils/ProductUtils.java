@@ -2,14 +2,18 @@ package com.product.inventory.api.utils;
 
 import java.util.Objects;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.product.inventory.api.exception.ProductException;
 import com.product.inventory.api.model.Product;
-import com.product.inventory.api.model.ProductResponse;
+import com.product.inventory.api.model.ProductErrorResponse;
 
 public class ProductUtils {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProductUtils.class);
 
 	public static void validateProductData(Product product) {
 		if (product.getName() == null || product.getName().trim().isEmpty()) {
@@ -62,8 +66,9 @@ public class ProductUtils {
 		}
 	}
 	
-	 public static ResponseEntity<ProductResponse> handleProductException(ProductException e) {
-	        ProductResponse errorResponse = new ProductResponse(false, e.getMessage(), e.getHttpStatus().toString());
+	 public static  ResponseEntity<?> handleProductException(ProductException e) {
+	        LOGGER.error("Error: {}", e.getMessage());
+	        ProductErrorResponse errorResponse = new ProductErrorResponse(false, e.getMessage(), e.getHttpStatus().toString());
 	        return ResponseEntity.status(e.getHttpStatus()).body(errorResponse);
 	    }
 }

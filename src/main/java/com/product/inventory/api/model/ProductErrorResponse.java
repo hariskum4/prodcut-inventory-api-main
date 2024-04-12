@@ -11,20 +11,15 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
 public class ProductErrorResponse {
 	 private boolean success;
-	  private String message;
-	  private Object products; 
+	  private String message; 
 	  private String error; 
-	  // private Product product; 
 
 		public ProductErrorResponse(boolean success, String message, String error) {
-			super();
 			this.success = success;
 			this.message = message;
 			this.error = error;
@@ -47,14 +42,6 @@ public class ProductErrorResponse {
 			this.message = message;
 		}
 
-		public Object getProducts() {
-			return products;
-		}
-
-		public void setProducts(Object products) {
-			this.products = products;
-		}
-
 		public String getError() {
 			return error;
 		}
@@ -65,10 +52,10 @@ public class ProductErrorResponse {
 
 		@Override
 		public String toString() {
-			return "ProductErrorResponse [success=" + success + ", message=" + message + ", products=" + products
-					+ ", error=" + error + "]";
+			return "ProductErrorResponse [success=" + success + ", message=" + message + ", error=" + error + "]";
 		}
- 
+
+		
  
 
 }
